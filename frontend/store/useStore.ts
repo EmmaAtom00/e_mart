@@ -242,6 +242,8 @@ export const useStore = create<StoreState>()(
                             isLoading: false,
                             error: null,
                         });
+                        // Refresh page to ensure complete state reset
+                        window.location.reload();
                         return true;
                     } else {
                         const errorMsg = response.error || "Invalid credentials. Please try again.";
@@ -274,6 +276,8 @@ export const useStore = create<StoreState>()(
                     isLoading: false,
                     error: null,
                 });
+                // Refresh page to ensure complete state reset
+                window.location.reload();
             },
 
             signup: async (firstName: string, lastName: string, email: string, password: string, confirmPassword: string) => {
