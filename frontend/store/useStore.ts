@@ -232,9 +232,16 @@ export const useStore = create<StoreState>()(
                                 isAuthChecked: true,
                             });
                         } else {
+                            // If getCurrentUser fails but we had a token, it might be expired
                             set({ isLoggedIn: false, user: null, isLoading: false, isAuthChecked: true });
                         }
                     } else {
+                        // Check if we have tokens in localStorage as a backup
+                        const localToken = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
+                        if (localToken) {
+                             // If we have a localToken but cookies are missing, the middleware might still fail.
+                             // We don't force a login state here if cookies are missing because middleware depends on cookies.
+                        }
                         set({ isLoggedIn: false, user: null, isLoading: false, isAuthChecked: true });
                     }
                 } catch (err) {

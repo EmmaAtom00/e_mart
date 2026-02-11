@@ -64,17 +64,30 @@ class ApiClient {
 
     private setTokens(access: string, refresh: string) {
         if (typeof window === "undefined") return;
+        
+        const isProduction = process.env.NODE_ENV === "production";
+        const secureFlag = isProduction ? "; Secure" : "";
+        const sameSiteFlag = "; SameSite=Lax";
+        
         const date = new Date();
         date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days
         const expires = "; expires=" + date.toUTCString();
-        document.cookie = "auth_token=" + access + expires + "; path=/; SameSite=Lax";
-        document.cookie = "refresh_token=" + refresh + expires + "; path=/; SameSite=Lax";
+        
+        // Set Cookies
+        document.cookie = `auth_token=${access}${expires}; path=/${sameSiteFlag}${secureFlag}`;
+        document.cookie = `refresh_token=${refresh}${expires}; path=/${sameSiteFlag}${secureFlag}`;
+        
+        // Fallback for client-side state
+        localStorage.setItem("auth_token", access);
+        localStorage.setItem("refresh_token", refresh);
     }
 
     private clearTokens() {
         if (typeof window === "undefined") return;
         document.cookie = "auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         document.cookie = "refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("refresh_token");
     }
 
     private async refreshAccessToken(): Promise<boolean> {
