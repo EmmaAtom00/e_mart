@@ -3,7 +3,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from drf_spectacular.utils import extend_schema_field
 from drf_spectacular.types import OpenApiTypes
 from django.contrib.auth import get_user_model
-from .models import Cart, CartItem, Product, Category
+from .models import Cart, CartItem, Product, Category, Wishlist, WishlistItem
 
 User = get_user_model()
 
@@ -109,7 +109,7 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ['id', 'cart_code', 'cartitems', 'cart_total']
+        fields = ['id', 'user', 'cart_code', 'cartitems', 'cart_total']
 
     @extend_schema_field(OpenApiTypes.FLOAT)
     def get_cart_total(self, cart):
@@ -124,3 +124,20 @@ class CartStatSerializer(serializers.ModelSerializer):
 
     def get_total_quantity(self, cart):
         return sum(item.quantity for item in cart.cartitems.all())
+
+# ==================== WISHLIST SERIALIZERS ====================
+
+class WishlistItemSerializer(serializers.ModelSerializer):
+    product = ProductListSerializer(read_only=True)
+    product_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = WishlistItem
+        fields = ['id', 'product', 'product_id', 'added_at']
+
+class WishlistSerializer(serializers.ModelSerializer):
+    items = WishlistItemSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Wishlist
+        fields = ['id', 'user', 'items', 'created_at']

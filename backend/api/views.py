@@ -9,7 +9,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
-from .models import Cart, CartItem, Category, Product
+from .models import Cart, CartItem, Category, Product, Wishlist, WishlistItem
 from .filters import ProductFilter
 from .serializers import (
     CartSerializer, 
@@ -20,6 +20,8 @@ from .serializers import (
     UserSerializer,
     SignUpSerializer,
     CustomTokenObtainPairSerializer,
+    WishlistSerializer,
+    WishlistItemSerializer,
 )
 
 User = get_user_model()
@@ -195,6 +197,11 @@ def add_to_cart(request):
 
     # Fetch or create the cart
     cart, _ = Cart.objects.get_or_create(cart_code=cart_code)
+    
+    # Link to user if logged in
+    if request.user.is_authenticated:
+        cart.user = request.user
+        cart.save()
 
     # Fetch the product or return 404
     product = get_object_or_404(Product, id=product_id)
@@ -349,4 +356,51 @@ def clear_cart(request):
     CartItem.objects.filter(cart=cart).delete()
     
     serializer = CartSerializer(cart)
+    return Response(serializer.data)
+
+
+# ==================== WISHLIST VIEWS ====================
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_wishlist(request):
+    """
+    Get user's wishlist.
+    """
+    wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
+    serializer = WishlistSerializer(wishlist)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_to_wishlist(request):
+    """
+    Add a product to user's wishlist.
+    """
+    product_id = request.data.get("product_id")
+    if not product_id:
+        return Response({"error": "product_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
+    product = get_object_or_404(Product, id=product_id)
+    
+    WishlistItem.objects.get_or_create(wishlist=wishlist, product=product)
+    
+    serializer = WishlistSerializer(wishlist)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def remove_from_wishlist(request):
+    """
+    Remove a product from user's wishlist.
+    """
+    product_id = request.data.get("product_id")
+    if not product_id:
+        return Response({"error": "product_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    wishlist = get_object_or_404(Wishlist, user=request.user)
+    WishlistItem.objects.filter(wishlist=wishlist, product_id=product_id).delete()
+    
+    serializer = WishlistSerializer(wishlist)
     return Response(serializer.data)

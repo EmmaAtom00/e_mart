@@ -27,6 +27,11 @@ urlpatterns = [
     path('cart/update/', views.update_cart_item, name='update_cart_item'),
     path('cart/clear/', views.clear_cart, name='clear_cart'),
 
+    # ==================== WISHLIST ====================
+    path('wishlist/get/', views.get_wishlist, name='get_wishlist'),
+    path('wishlist/add/', views.add_to_wishlist, name='add_to_wishlist'),
+    path('wishlist/remove/', views.remove_from_wishlist, name='remove_from_wishlist'),
+
     # ==================== API DOCUMENTATION ====================
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),

@@ -24,6 +24,7 @@ interface StoreState {
     updateCartQuantity: (id: number, quantity: number) => void;
     clearCart: () => void;
     cartTotal: number;
+    cartCode: string | null;
 
     // Wishlist
     wishlist: Product[];
@@ -41,6 +42,7 @@ interface StoreState {
     logout: () => Promise<void>;
     signup: (firstName: string, lastName: string, email: string, password: string, confirmPassword: string) => Promise<boolean>;
     initializeAuth: () => Promise<void>;
+    getCartCode: () => string;
     clearError: () => void;
 }
 
@@ -49,7 +51,34 @@ export const useStore = create<StoreState>()(
         (set, get) => ({
             // Cart
             cart: [],
-            addToCart: (product: Product, quantity: number) => {
+            cartCode: null,
+            addToCart: async (product: Product, quantity: number) => {
+                const { isLoggedIn, cartCode, getCartCode } = get();
+                const code = cartCode || getCartCode();
+
+                if (isLoggedIn) {
+                    try {
+                        const response = await apiClient.request<any>("/cart/add/", {
+                            method: "POST",
+                            body: JSON.stringify({
+                                cart_code: code,
+                                product_id: product.id,
+                                quantity: quantity
+                            })
+                        });
+                        if (response.success) {
+                            // Sync state from server
+                            set({ cart: response.data.cartitems.map((item: any) => ({
+                                ...item.product,
+                                quantity: item.quantity
+                            })) });
+                            return;
+                        }
+                    } catch (err) {
+                        console.error("Add to cart error:", err);
+                    }
+                }
+
                 set((state) => {
                     const existingItem = state.cart.find((item) => item.id === product.id);
                     if (existingItem) {
@@ -67,17 +96,63 @@ export const useStore = create<StoreState>()(
                 });
             },
 
-            removeFromCart: (id: number) => {
+            removeFromCart: async (id: number) => {
+                const { isLoggedIn, cartCode } = get();
+                if (isLoggedIn && cartCode) {
+                    try {
+                        const response = await apiClient.request<any>("/cart/remove/", {
+                            method: "DELETE",
+                            body: JSON.stringify({
+                                cart_code: cartCode,
+                                product_id: id
+                            })
+                        });
+                        if (response.success) {
+                            set({ cart: response.data.cartitems.map((item: any) => ({
+                                ...item.product,
+                                quantity: item.quantity
+                            })) });
+                            return;
+                        }
+                    } catch (err) {
+                        console.error("Remove from cart error:", err);
+                    }
+                }
+
                 set((state) => ({
                     cart: state.cart.filter((item) => item.id !== id),
                 }));
             },
 
-            updateCartQuantity: (id: number, quantity: number) => {
+            updateCartQuantity: async (id: number, quantity: number) => {
                 if (quantity < 1) {
                     get().removeFromCart(id);
                     return;
                 }
+
+                const { isLoggedIn, cartCode } = get();
+                if (isLoggedIn && cartCode) {
+                    try {
+                        const response = await apiClient.request<any>("/cart/update/", {
+                            method: "PATCH",
+                            body: JSON.stringify({
+                                cart_code: cartCode,
+                                product_id: id,
+                                quantity: quantity
+                            })
+                        });
+                        if (response.success) {
+                            set({ cart: response.data.cartitems.map((item: any) => ({
+                                ...item.product,
+                                quantity: item.quantity
+                            })) });
+                            return;
+                        }
+                    } catch (err) {
+                        console.error("Update cart quantity error:", err);
+                    }
+                }
+
                 set((state) => ({
                     cart: state.cart.map((item) =>
                         item.id === id ? { ...item, quantity } : item
@@ -95,7 +170,20 @@ export const useStore = create<StoreState>()(
 
             // Wishlist
             wishlist: [],
-            addToWishlist: (product: Product) => {
+            addToWishlist: async (product: Product) => {
+                const { isLoggedIn } = get();
+                if (isLoggedIn) {
+                    try {
+                        const res = await apiClient.addToWishlist(product.id);
+                        if (res.success) {
+                            set({ wishlist: res.data.items.map((item: any) => item.product) });
+                            return;
+                        }
+                    } catch (err) {
+                        console.error("Add to wishlist error:", err);
+                    }
+                }
+
                 set((state) => {
                     if (state.wishlist.find((item) => item.id === product.id)) {
                         return state;
@@ -106,7 +194,20 @@ export const useStore = create<StoreState>()(
                 });
             },
 
-            removeFromWishlist: (id: number) => {
+            removeFromWishlist: async (id: number) => {
+                const { isLoggedIn } = get();
+                if (isLoggedIn) {
+                    try {
+                        const res = await apiClient.removeFromWishlist(id);
+                        if (res.success) {
+                            set({ wishlist: res.data.items.map((item: any) => item.product) });
+                            return;
+                        }
+                    } catch (err) {
+                        console.error("Remove from wishlist error:", err);
+                    }
+                }
+
                 set((state) => ({
                     wishlist: state.wishlist.filter((item) => item.id !== id),
                 }));
@@ -231,23 +332,48 @@ export const useStore = create<StoreState>()(
                                 isLoading: false,
                                 isAuthChecked: true,
                             });
+
+                            // Sync Cart and Wishlist from DB
+                            const cartCode = get().getCartCode();
+                            const cartRes = await apiClient.request<any>(`/cart/get/?cart_code=${cartCode}`);
+                            if (cartRes.success) {
+                                set({ cart: cartRes.data.cartitems.map((item: any) => ({
+                                    ...item.product,
+                                    quantity: item.quantity
+                                })) });
+                            }
+
+                            const wishlistRes = await apiClient.getWishlist();
+                            if (wishlistRes.success) {
+                                set({ wishlist: wishlistRes.data.items.map((item: any) => item.product) });
+                            }
                         } else {
                             // If getCurrentUser fails but we had a token, it might be expired
                             set({ isLoggedIn: false, user: null, isLoading: false, isAuthChecked: true });
                         }
                     } else {
-                        // Check if we have tokens in localStorage as a backup
-                        const localToken = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
-                        if (localToken) {
-                             // If we have a localToken but cookies are missing, the middleware might still fail.
-                             // We don't force a login state here if cookies are missing because middleware depends on cookies.
-                        }
                         set({ isLoggedIn: false, user: null, isLoading: false, isAuthChecked: true });
                     }
                 } catch (err) {
                     console.error("Auth initialization error:", err);
                     set({ isLoggedIn: false, user: null, isLoading: false, isAuthChecked: true });
                 }
+            },
+
+            getCartCode: () => {
+                const { cartCode } = get() as any;
+                if (cartCode) return cartCode;
+
+                let code = "";
+                if (typeof window !== "undefined") {
+                    code = localStorage.getItem("cart_code") || "";
+                    if (!code) {
+                        code = Math.random().toString(36).substring(2, 13);
+                        localStorage.setItem("cart_code", code);
+                    }
+                }
+                set({ cartCode: code } as any);
+                return code;
             },
 
             clearError: () => {

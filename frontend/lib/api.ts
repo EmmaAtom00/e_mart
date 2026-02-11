@@ -271,6 +271,25 @@ class ApiClient {
         });
     }
 
+    // Wishlist Methods
+    async getWishlist(): Promise<ApiResponse<any>> {
+        return this.request("/wishlist/get/", { method: "GET" });
+    }
+
+    async addToWishlist(productId: number): Promise<ApiResponse<any>> {
+        return this.request("/wishlist/add/", {
+            method: "POST",
+            body: JSON.stringify({ product_id: productId }),
+        });
+    }
+
+    async removeFromWishlist(productId: number): Promise<ApiResponse<any>> {
+        return this.request("/wishlist/remove/", {
+            method: "DELETE",
+            body: JSON.stringify({ product_id: productId }),
+        });
+    }
+
     async getOrders(): Promise<ApiResponse<any[]>> {
         return this.request("/orders/", { method: "GET" });
     }
