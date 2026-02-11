@@ -40,11 +40,19 @@ const frontendSlides: Slide[] = [
         <div className="grid grid-cols-2 gap-4 mt-8">
           <div className="p-6 bg-blue-50 rounded-2xl border border-blue-100">
             <h3 className="font-bold text-blue-900 mb-2">Modern Stack</h3>
-            <p className="text-sm text-blue-700">Next.js 15, React 19, Tailwind CSS</p>
+            <p className="text-sm text-blue-700">Next.js 16, React 19, TypeScript, Tailwind CSS</p>
           </div>
           <div className="p-6 bg-purple-50 rounded-2xl border border-purple-100">
             <h3 className="font-bold text-purple-900 mb-2">Performance</h3>
-            <p className="text-sm text-purple-700">Optimized LCP, SEO-ready, Responsive</p>
+            <p className="text-sm text-purple-700">SSR, Optimized Images, SEO-ready</p>
+          </div>
+          <div className="p-6 bg-green-50 rounded-2xl border border-green-100">
+            <h3 className="font-bold text-green-900 mb-2">State Management</h3>
+            <p className="text-sm text-green-700">Zustand with Backend Sync</p>
+          </div>
+          <div className="p-6 bg-orange-50 rounded-2xl border border-orange-100">
+            <h3 className="font-bold text-orange-900 mb-2">Deployment</h3>
+            <p className="text-sm text-orange-700">Vercel (Production-Ready)</p>
           </div>
         </div>
       </div>
@@ -57,10 +65,12 @@ const frontendSlides: Slide[] = [
     content: (
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
         {[
-          { title: "Infinite Scrolling", desc: "Seamless product exploration with Intersection Observer." },
+          { title: "Persistent Cart", desc: "Database-backed cart for guest & authenticated users with cross-device sync." },
+          { title: "User Wishlist", desc: "Save products for later with one-click move to cart functionality." },
+          { title: "JWT Authentication", desc: "Secure login with HTTP-only cookies and automatic token refresh." },
+          { title: "Protected Routes", desc: "Next.js middleware guards sensitive pages (account, wishlist)." },
           { title: "Advanced Filtering", desc: "Multi-criteria search, categories, and price ranges." },
-          { title: "Dynamic Cart", desc: "Real-time updates with global Zustand state." },
-          { title: "Secure Auth", desc: "HTTP-only cookie persistence and protected routes." }
+          { title: "Optimistic Updates", desc: "Instant UI feedback with server sync and error rollback." }
         ].map((item, i) => (
           <li key={i} className="flex gap-4 p-4 bg-white shadow-sm border border-gray-100 rounded-xl">
             <CheckCircle2 className="text-green-500 shrink-0 mt-1" size={20} />
@@ -71,6 +81,42 @@ const frontendSlides: Slide[] = [
           </li>
         ))}
       </ul>
+    )
+  },
+  {
+    title: "State Synchronization",
+    subtitle: "Client ↔ Server Harmony",
+    icon: <Code2 className="w-12 h-12 text-purple-500" />,
+    content: (
+      <div className="space-y-6 max-w-4xl mx-auto">
+        <div className="p-6 bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl border border-purple-100">
+          <h4 className="font-bold text-lg mb-4 text-center">Zustand + Backend Sync Pattern</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div className="bg-white p-4 rounded-xl shadow-sm">
+              <div className="font-bold text-purple-600 mb-2">1. Optimistic Update</div>
+              <p className="text-gray-600">Instant UI feedback before API call</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm">
+              <div className="font-bold text-blue-600 mb-2">2. Server Sync</div>
+              <p className="text-gray-600">POST to Django API with cart_code</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm">
+              <div className="font-bold text-green-600 mb-2">3. State Update</div>
+              <p className="text-gray-600">Sync Zustand with server response</p>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="p-4 bg-white border border-gray-100 rounded-xl">
+            <h5 className="font-bold text-gray-900 mb-2">Guest Cart</h5>
+            <p className="text-xs text-gray-500">Unique cart_code in localStorage, persists across sessions</p>
+          </div>
+          <div className="p-4 bg-white border border-gray-100 rounded-xl">
+            <h5 className="font-bold text-gray-900 mb-2">Auto-Link on Login</h5>
+            <p className="text-xs text-gray-500">Guest cart automatically linked to user account</p>
+          </div>
+        </div>
+      </div>
     )
   },
   {
@@ -105,18 +151,27 @@ const frontendSlides: Slide[] = [
     subtitle: "Industry-Leading Foundations",
     icon: <ShieldCheck className="w-12 h-12 text-green-500" />,
     content: (
-      <div className="grid grid-cols-3 gap-6 text-center">
-        {[
-          { icon: <Monitor className="mx-auto mb-2 text-blue-500" />, title: "Responsive", desc: "Mobile-first approach across all breakpoints." },
-          { icon: <Search className="mx-auto mb-2 text-orange-500" />, title: "SEO", desc: "Semantic HTML5 and meta optimization." },
-          { icon: <Code2 className="mx-auto mb-2 text-purple-500" />, title: "Architecture", desc: "Component-based, reusable design system." }
-        ].map((item, i) => (
-          <div key={i} className="space-y-2">
-            {item.icon}
-            <h4 className="font-bold">{item.title}</h4>
-            <p className="text-xs text-gray-500">{item.desc}</p>
-          </div>
-        ))}
+      <div className="space-y-6">
+        <div className="grid grid-cols-3 gap-6 text-center">
+          {[
+            { icon: <Monitor className="mx-auto mb-2 text-blue-500" />, title: "Responsive", desc: "Mobile-first approach across all breakpoints." },
+            { icon: <Search className="mx-auto mb-2 text-orange-500" />, title: "SEO", desc: "Semantic HTML5 and meta optimization." },
+            { icon: <Code2 className="mx-auto mb-2 text-purple-500" />, title: "Architecture", desc: "Component-based, reusable design system." }
+          ].map((item, i) => (
+            <div key={i} className="space-y-2">
+              {item.icon}
+              <h4 className="font-bold">{item.title}</h4>
+              <p className="text-xs text-gray-500">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-center gap-3 flex-wrap">
+          <div className="px-4 py-2 bg-blue-50 text-blue-700 rounded-full border border-blue-100 text-sm font-bold">Next.js 16</div>
+          <div className="px-4 py-2 bg-purple-50 text-purple-700 rounded-full border border-purple-100 text-sm font-bold">React 19</div>
+          <div className="px-4 py-2 bg-green-50 text-green-700 rounded-full border border-green-100 text-sm font-bold">TypeScript 5</div>
+          <div className="px-4 py-2 bg-orange-50 text-orange-700 rounded-full border border-orange-100 text-sm font-bold">Zustand 5</div>
+          <div className="px-4 py-2 bg-pink-50 text-pink-700 rounded-full border border-pink-100 text-sm font-bold">Tailwind CSS 4</div>
+        </div>
       </div>
     )
   }
@@ -130,54 +185,117 @@ const backendSlides: Slide[] = [
     content: (
       <div className="space-y-6">
         <p className="text-xl text-gray-600 leading-relaxed text-center max-w-2xl mx-auto">
-          A high-performance REST API built with Django and DRF, designed to handle complex relational data with ease.
+          A production-ready REST API built with Django and DRF, designed to handle complex relational data with persistent cart and wishlist functionality.
         </p>
-        <div className="flex justify-center gap-4 mt-8">
-          <div className="px-6 py-3 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100 font-bold">Django 5.1</div>
-          <div className="px-6 py-3 bg-blue-50 text-blue-700 rounded-full border border-blue-100 font-bold">DRF</div>
-          <div className="px-6 py-3 bg-purple-50 text-purple-700 rounded-full border border-purple-100 font-bold">JWT + Cookies</div>
+        <div className="grid grid-cols-2 gap-4 mt-8">
+          <div className="px-6 py-3 bg-emerald-50 text-emerald-700 rounded-2xl border border-emerald-100 font-bold text-center">Django 5.1</div>
+          <div className="px-6 py-3 bg-blue-50 text-blue-700 rounded-2xl border border-blue-100 font-bold text-center">DRF + Spectacular</div>
+          <div className="px-6 py-3 bg-purple-50 text-purple-700 rounded-2xl border border-purple-100 font-bold text-center">JWT + Cookies</div>
+          <div className="px-6 py-3 bg-orange-50 text-orange-700 rounded-2xl border border-orange-100 font-bold text-center">PostgreSQL</div>
+        </div>
+        <div className="flex justify-center gap-3 mt-4">
+          <div className="px-4 py-2 bg-green-50 text-green-700 rounded-full border border-green-100 text-sm">Deployed on Render</div>
+          <div className="px-4 py-2 bg-blue-50 text-blue-700 rounded-full border border-blue-100 text-sm">Cloudinary CDN</div>
         </div>
       </div>
     )
   },
   {
     title: "ERD & Data Modeling",
-    subtitle: "Data with Direction",
+    subtitle: "7 Entities, Perfectly Normalized",
     icon: <Database className="w-12 h-12 text-blue-600" />,
     content: (
-      <div className="space-y-6 max-w-3xl mx-auto">
+      <div className="space-y-6 max-w-4xl mx-auto">
         <div className="p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
-          <h4 className="font-bold mb-4 text-center">Core Relations</h4>
-          <div className="grid grid-cols-3 gap-2 items-center text-center text-sm">
-            <div className="p-3 bg-gray-50 rounded-lg">Users (Custom)</div>
+          <h4 className="font-bold mb-4 text-center">Core Relations (3NF)</h4>
+          <div className="grid grid-cols-3 gap-3 items-center text-center text-sm">
+            <div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
+              <div className="font-bold text-blue-900">CustomUser</div>
+              <div className="text-xs text-blue-600">Auth + Profile</div>
+            </div>
             <ArrowRight className="mx-auto text-gray-300" size={16} />
-            <div className="p-3 bg-gray-50 rounded-lg">Orders / Profiles</div>
-            <div className="p-3 bg-gray-50 rounded-lg">Categories</div>
+            <div className="p-3 bg-purple-50 rounded-lg border border-purple-100">
+              <div className="font-bold text-purple-900">Cart (1:M)</div>
+              <div className="text-xs text-purple-600">Nullable user_id</div>
+            </div>
+            
+            <div className="p-3 bg-green-50 rounded-lg border border-green-100">
+              <div className="font-bold text-green-900">Category</div>
+              <div className="text-xs text-green-600">Slug-based</div>
+            </div>
             <ArrowRight className="mx-auto text-gray-300" size={16} />
-            <div className="p-3 bg-gray-50 rounded-lg">Products (M2M)</div>
-            <div className="p-3 bg-gray-50 rounded-lg">Carts</div>
+            <div className="p-3 bg-orange-50 rounded-lg border border-orange-100">
+              <div className="font-bold text-orange-900">Product</div>
+              <div className="text-xs text-orange-600">Denormalized price</div>
+            </div>
+            
+            <div className="p-3 bg-pink-50 rounded-lg border border-pink-100">
+              <div className="font-bold text-pink-900">Wishlist (1:1)</div>
+              <div className="text-xs text-pink-600">Per user</div>
+            </div>
             <ArrowRight className="mx-auto text-gray-300" size={16} />
-            <div className="p-3 bg-gray-50 rounded-lg">Line Items</div>
+            <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-100">
+              <div className="font-bold text-indigo-900">WishlistItem</div>
+              <div className="text-xs text-indigo-600">Unique constraint</div>
+            </div>
           </div>
         </div>
-        <p className="text-sm text-center text-gray-500 italic">"Rationale: Use of SlugFields for SEO and UUIDs/Unique Codes for anonymous carts."</p>
+        <div className="grid grid-cols-2 gap-3 text-xs">
+          <div className="p-3 bg-gray-50 rounded-lg">
+            <span className="font-bold">Guest Cart Pattern:</span> Nullable user_id + unique cart_code
+          </div>
+          <div className="p-3 bg-gray-50 rounded-lg">
+            <span className="font-bold">Denormalization:</span> sale_price stored for performance
+          </div>
+        </div>
       </div>
     )
   },
   {
-    title: "Key Endpoints & Features",
-    subtitle: "The Business Logic Layer",
+    title: "API Endpoints & Features",
+    subtitle: "RESTful, Documented, Production-Ready",
     icon: <ShieldCheck className="w-12 h-12 text-purple-500" />,
     content: (
-      <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-2 gap-4">
+          {[
+            { title: "Authentication (6)", desc: "Signup, login, logout, refresh, profile, JWT blacklisting" },
+            { title: "Products (2)", desc: "List with filters, detail by slug, category filtering" },
+            { title: "Cart (5)", desc: "Add, get, update, remove, clear - guest + auth support" },
+            { title: "Wishlist (3)", desc: "Get, add, remove - requires authentication" },
+            { title: "Categories (2)", desc: "List all, detail by slug with products" },
+            { title: "Swagger Docs", desc: "Auto-generated OpenAPI 3.0 with drf-spectacular" }
+          ].map((item, i) => (
+            <div key={i} className="p-4 bg-white border border-gray-100 rounded-xl shadow-sm">
+              <h5 className="font-bold text-gray-900 mb-1">{item.title}</h5>
+              <p className="text-xs text-gray-500">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+        <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100">
+          <p className="text-sm text-center font-medium text-gray-700">
+            <span className="font-bold">18 Total Endpoints</span> • All documented with Swagger UI • Interactive testing available
+          </p>
+        </div>
+      </div>
+    )
+  },
+  {
+    title: "Advanced Features",
+    subtitle: "Beyond Basic CRUD",
+    icon: <Zap className="w-12 h-12 text-yellow-600" />,
+    content: (
+      <div className="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
         {[
-          { title: "Auth Ecosystem", desc: "Secure signup, login, and token blacklisting logic." },
-          { title: "Filtering Engine", desc: "Custom Django Filters for min/max price range logic." },
-          { title: "Swagger & OpenAPI", desc: "Auto-generated interactive API documentation." },
-          { title: "Seeding Tools", desc: "Custom management commands for data population." }
+          { title: "Nested Serializers", desc: "Cart → CartItem → Product with calculated totals" },
+          { title: "Custom Filters", desc: "Django Filter Backend for min/max price, category" },
+          { title: "Optimistic Locking", desc: "Prevent race conditions on cart updates" },
+          { title: "Guest Cart Linking", desc: "Auto-link guest cart to user on authentication" },
+          { title: "Unique Constraints", desc: "Prevent duplicate wishlist items at DB level" },
+          { title: "Calculated Fields", desc: "sub_total, cart_total via SerializerMethodField" }
         ].map((item, i) => (
           <div key={i} className="p-4 bg-white border border-gray-100 rounded-xl">
-            <h5 className="font-bold text-gray-900">{item.title}</h5>
+            <h5 className="font-bold text-gray-900 mb-1">{item.title}</h5>
             <p className="text-xs text-gray-500">{item.desc}</p>
           </div>
         ))}
@@ -185,22 +303,98 @@ const backendSlides: Slide[] = [
     )
   },
   {
-    title: "Deployment & Production",
-    subtitle: "Ready for the World",
-    icon: <Zap className="w-12 h-12 text-yellow-600" />,
+    title: "Security & Production",
+    subtitle: "Enterprise-Grade Standards",
+    icon: <ShieldCheck className="w-12 h-12 text-green-600" />,
     content: (
-      <div className="space-y-4 max-w-2xl mx-auto">
-        <div className="flex items-center gap-4 p-4 bg-green-50 text-green-800 rounded-xl">
-          <CheckCircle2 size={24} />
-          <p className="font-medium">Secure Environment Variable Management (Decouple)</p>
+      <div className="space-y-4 max-w-3xl mx-auto">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-start gap-4 p-4 bg-green-50 text-green-800 rounded-xl border border-green-100">
+            <CheckCircle2 size={24} className="shrink-0 mt-1" />
+            <div>
+              <p className="font-bold mb-1">JWT Authentication</p>
+              <p className="text-xs">Access (15min) + Refresh (7 days) tokens</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-4 p-4 bg-blue-50 text-blue-800 rounded-xl border border-blue-100">
+            <CheckCircle2 size={24} className="shrink-0 mt-1" />
+            <div>
+              <p className="font-bold mb-1">Secure Cookies</p>
+              <p className="text-xs">HttpOnly, Secure, SameSite=Lax flags</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-4 p-4 bg-purple-50 text-purple-800 rounded-xl border border-purple-100">
+            <CheckCircle2 size={24} className="shrink-0 mt-1" />
+            <div>
+              <p className="font-bold mb-1">Password Hashing</p>
+              <p className="text-xs">PBKDF2 with 600,000 iterations</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-4 p-4 bg-orange-50 text-orange-800 rounded-xl border border-orange-100">
+            <CheckCircle2 size={24} className="shrink-0 mt-1" />
+            <div>
+              <p className="font-bold mb-1">CORS Protection</p>
+              <p className="text-xs">Configured allowed origins and credentials</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-4 p-4 bg-pink-50 text-pink-800 rounded-xl border border-pink-100">
+            <CheckCircle2 size={24} className="shrink-0 mt-1" />
+            <div>
+              <p className="font-bold mb-1">Input Validation</p>
+              <p className="text-xs">DRF serializers at all layers</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-4 p-4 bg-indigo-50 text-indigo-800 rounded-xl border border-indigo-100">
+            <CheckCircle2 size={24} className="shrink-0 mt-1" />
+            <div>
+              <p className="font-bold mb-1">Cloudinary CDN</p>
+              <p className="text-xs">Persistent media storage with optimization</p>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-4 p-4 bg-blue-50 text-blue-800 rounded-xl">
-          <ShieldCheck size={24} />
-          <p className="font-medium">CORS Policy & CSRF Protection Configured</p>
+      </div>
+    )
+  },
+  {
+    title: "Documentation & Testing",
+    subtitle: "Developer-Friendly API",
+    icon: <Code2 className="w-12 h-12 text-blue-600" />,
+    content: (
+      <div className="space-y-6 max-w-3xl mx-auto">
+        <div className="grid grid-cols-3 gap-4 text-center">
+          <div className="p-6 bg-white border border-gray-100 rounded-xl shadow-sm">
+            <div className="text-3xl font-bold text-blue-600 mb-2">18</div>
+            <div className="text-sm font-medium text-gray-600">API Endpoints</div>
+          </div>
+          <div className="p-6 bg-white border border-gray-100 rounded-xl shadow-sm">
+            <div className="text-3xl font-bold text-purple-600 mb-2">7</div>
+            <div className="text-sm font-medium text-gray-600">Database Models</div>
+          </div>
+          <div className="p-6 bg-white border border-gray-100 rounded-xl shadow-sm">
+            <div className="text-3xl font-bold text-green-600 mb-2">100%</div>
+            <div className="text-sm font-medium text-gray-600">Documented</div>
+          </div>
         </div>
-        <div className="flex items-center gap-4 p-4 bg-orange-50 text-orange-800 rounded-xl">
-          <Layout size={24} />
-          <p className="font-medium">Optimized Media/Static File Serving</p>
+        <div className="p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl border border-blue-100">
+          <h4 className="font-bold text-center mb-4">Complete Documentation Suite</h4>
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 size={16} className="text-green-600" />
+              <span>Swagger UI (Interactive)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 size={16} className="text-green-600" />
+              <span>Postman Collection</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 size={16} className="text-green-600" />
+              <span>ERD with Mermaid Diagram</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 size={16} className="text-green-600" />
+              <span>Master Documentation</span>
+            </div>
+          </div>
         </div>
       </div>
     )
