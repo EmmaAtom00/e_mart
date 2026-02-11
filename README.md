@@ -640,7 +640,6 @@ For issues or questions:
 1. Check the troubleshooting section
 2. Review API documentation
 3. Check browser console for errors
-4. Check backend logs: `python manage.py runserver`
 
 ## 📄 License
 
