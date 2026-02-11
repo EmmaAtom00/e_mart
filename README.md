@@ -648,7 +648,7 @@ This project is licensed under the MIT License - see LICENSE file for details.
 
 ## 👥 Contributors
 
-- Your Name - Emmanuel Olarewaju
+- Emmanuel Olarewaju
 
 ---
 
