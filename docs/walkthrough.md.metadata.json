@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
+  "summary": "Complete walkthrough of the backend and production fixes. Covers git tracking, Supabase integration, Render redirect loops, and Cloudinary media storage.",
+  "updatedAt": "2026-02-11T15:52:16.631827080Z",
+  "version": "2"
+}

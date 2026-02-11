@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary": "Plan to implement database-backed persistence for Cart and Wishlist. Includes linking Carts to users, creating Wishlist models, and synchronizing the frontend store with the backend for a seamless cross-device experience.",
+  "updatedAt": "2026-02-11T17:14:42.389786393Z",
+  "version": "4"
+}

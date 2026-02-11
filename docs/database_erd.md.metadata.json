@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Complete Entity Relationship Diagram documentation for E-Mart database including all models (CustomUser, Category, Product, Cart, CartItem, Wishlist, WishlistItem), their relationships, key attributes, and constraints. Includes Mermaid diagram and detailed table specifications.",
+  "updatedAt": "2026-02-11T17:57:22.616261751Z"
+}
